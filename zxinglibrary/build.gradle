@@ -3,17 +3,17 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.gitee.userzzz94'
-version = '1.0.4'
+group = 'com.github.userzzz94'
+version = '1.0.2'
 
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.gitee.userzzz94'
-                artifactId = 'continue-scan'
-                version = '1.0.4'
+                groupId = 'com.github.userzzz94'
+                artifactId = 'ContinueScan'
+                version = '1.0.2'
             }
         }
     }
