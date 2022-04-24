@@ -37,5 +37,6 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
     implementation 'com.yanzhenjie:permission:2.0.2'
     implementation project(':zxinglibrary')
+//    implementation 'com.gitee.userzzz94:continue-scan:1.0.1'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 }
