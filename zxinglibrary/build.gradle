@@ -3,14 +3,17 @@ plugins {
     id 'maven-publish'
 }
 
+group = 'com.gitee.userzzz94'
+version = '1.0.4'
+
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.zzz.zxinglibrary'
-                artifactId = 'zxinglibrary'
-                version = '1.0.0'
+                groupId = 'com.gitee.userzzz94'
+                artifactId = 'continue-scan'
+                version = '1.0.4'
             }
         }
     }
