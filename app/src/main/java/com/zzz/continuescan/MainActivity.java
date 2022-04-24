@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import com.yanzhenjie.permission.runtime.Permission;
 import com.zzz.zxinglibrary.android.CaptureActivity;
 import com.zzz.zxinglibrary.bean.ZxingConfig;
 import com.zzz.zxinglibrary.common.Constant;
+
 
 public class MainActivity extends AppCompatActivity {
 
