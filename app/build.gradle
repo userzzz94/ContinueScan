@@ -1,6 +1,4 @@
-plugins {
-    id 'com.android.application'
-}
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -39,4 +37,5 @@ dependencies {
     implementation project(':zxinglibrary')
 //    implementation 'com.gitee.userzzz94:continue-scan:1.0.1'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+
 }
