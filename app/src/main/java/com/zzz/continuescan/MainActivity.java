@@ -87,7 +87,11 @@ public class MainActivity extends AppCompatActivity {
                     mTv1.setText(message);
                     Intent intentWarn = new Intent();
                     intentWarn.setAction(Constant.WARN_SCAN_ACTION);
-                    intentWarn.putExtra(Constant.WARN_SCAN_RESULT, "这是错误信息");
+                    if(message.length() <= 5){
+                        intentWarn.putExtra(Constant.WARN_SCAN_RESULT, "warnMsg:这是错误信息");
+                    }else{
+                        intentWarn.putExtra(Constant.WARN_SCAN_RESULT, "CS10-G,CS10-顶盖,3");
+                    }
                     sendBroadcast(intentWarn);
                 } catch (Exception e) {
                     e.printStackTrace();

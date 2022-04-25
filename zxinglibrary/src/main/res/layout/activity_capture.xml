@@ -10,7 +10,7 @@
     <SurfaceView
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -52,29 +52,47 @@
             android:id="@+id/viewfinder_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
-
+            android:layout_weight="1"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/bottomLayout"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="#99000000"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:background="#50000000">
+
+            <LinearLayout
+                android:id="@+id/llCaptureResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvCaptureCode"
+                    style="@style/TextView1"/>
+                <TextView
+                    android:id="@+id/tvCaptureName"
+                    style="@style/TextView1"/>
+                <TextView
+                    android:id="@+id/tvCaptureNumber"
+                    style="@style/TextView2"
+                    android:text="扫描数量："
+                    android:visibility="gone"/>
+            </LinearLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/flashLightLayout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/flashLightIv"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     app:srcCompat="@drawable/ic_close" />
 
                 <TextView
@@ -84,33 +102,9 @@
                     android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="@string/open_flash"
-                    android:textColor="#ffffff" />
+                    android:textColor="#ffffff"
+                    android:textSize="13sp"/>
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/albumLayout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/albumIv"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:tint="#ffffffff"
-                    app:srcCompat="@drawable/ic_photo" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="@string/gallery"
-
-                    android:textColor="#ffffff" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 

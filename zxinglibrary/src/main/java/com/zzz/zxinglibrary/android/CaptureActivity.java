@@ -18,6 +18,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +56,6 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
     private TextView flashLightTv;
     private AppCompatImageView backIv;
     private LinearLayoutCompat flashLightLayout;
-    private LinearLayoutCompat albumLayout;
     private LinearLayoutCompat bottomLayout;
     private boolean hasSurface;
     private InactivityTimer inactivityTimer;
@@ -63,6 +63,11 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
     private SurfaceHolder surfaceHolder;
+    private TextView mTvCaptureCode;
+    private TextView mTvCaptureName;
+    private TextView mTvCaptureNumber;
+    private LinearLayout mLlCaptureResult;
+    private boolean canScan = true;
 
 
     public ViewfinderView getViewfinderView() {
@@ -145,14 +150,11 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
 
         flashLightLayout = findViewById(R.id.flashLightLayout);
         flashLightLayout.setOnClickListener(this);
-        albumLayout = findViewById(R.id.albumLayout);
-        albumLayout.setOnClickListener(this);
         bottomLayout = findViewById(R.id.bottomLayout);
 
 
         switchVisibility(bottomLayout, config.isShowbottomLayout());
         switchVisibility(flashLightLayout, config.isShowFlashLight());
-        switchVisibility(albumLayout, config.isShowAlbum());
 
 
         /*有闪光灯就显示手电筒按钮  否则不显示*/
@@ -162,6 +164,10 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
             flashLightLayout.setVisibility(View.GONE);
         }
 
+        mTvCaptureCode = findViewById(R.id.tvCaptureCode);
+        mTvCaptureName = findViewById(R.id.tvCaptureName);
+        mTvCaptureNumber = findViewById(R.id.tvCaptureNumber);
+        mLlCaptureResult = findViewById(R.id.llCaptureResult);
     }
 
 
@@ -203,7 +209,7 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
         @Override
         public void run() {
             try {
-                if (handler != null){
+                if (handler != null) {
                     // 实现多次扫描
                     handler.restartPreviewAndDecode();
                 }
@@ -221,13 +227,18 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
         inactivityTimer.onActivity();
         beepManager.playBeepSoundAndVibrate();
 
-        if(config.isContinueScan()){
+        mLlCaptureResult.setVisibility(View.INVISIBLE);
+        if (config.isContinueScan()) {
+            if(!canScan){
+               return;
+            }
+            canScan = false;
             Intent intent = new Intent();
             intent.setAction(Constant.CAMERA_SCAN_ACTION);
             intent.putExtra(Constant.CAMERA_SCAN_RESULT, rawResult.getText());
             sendBroadcast(intent);
             mHandler.postDelayed(runnable, 3000);
-        }else{
+        } else {
             Intent intent = getIntent();
             intent.putExtra(Constant.CODED_CONTENT, rawResult.getText());
             setResult(RESULT_OK, intent);
@@ -304,7 +315,7 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
     @Override
     protected void onPause() {
 
-        Log.i("CaptureActivity","onPause");
+        Log.i("CaptureActivity", "onPause");
         if (handler != null) {
             handler.quitSynchronously();
             handler = null;
@@ -356,12 +367,6 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
         if (id == R.id.flashLightLayout) {
             /*切换闪光灯*/
             cameraManager.switchFlashLight(handler);
-        } else if (id == R.id.albumLayout) {
-            /*打开相册*/
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent, Constant.REQUEST_IMAGE);
         } else if (id == R.id.backIv) {
             finish();
         }
@@ -399,23 +404,35 @@ public class CaptureActivity extends AppCompatActivity implements SurfaceHolder.
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constant.WARN_SCAN_ACTION)) {
                 try {
-                    String message = intent.getStringExtra("warnMsg").trim();
+                    String message = intent.getStringExtra(Constant.WARN_SCAN_RESULT).trim();
                     Log.e(TAG, "onReceive: " + message);
-                    if(mDialogWarn != null){
-                        mDialogWarn.cancel();
-                    }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                            .setTitle("提示")
-                            .setMessage(message)
-                            .setCancelable(false)
-                            .setNegativeButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    if (message.startsWith("warnMsg")) {
+                        mLlCaptureResult.setVisibility(View.INVISIBLE);
+                        String str = message.substring(8);
+                        Log.e(TAG, "onSub: " + str);
 
-                                }
-                            });
-                    mDialogWarn = builder.create();
-                    mDialogWarn.show();
+                        if (mDialogWarn != null) {
+                            mDialogWarn.cancel();
+                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                                .setTitle("提示")
+                                .setMessage(str)
+                                .setCancelable(false)
+                                .setNegativeButton("确定", (dialog, which) -> {
+                                    dialog.cancel();
+                                    canScan = true;
+                                });
+                        mDialogWarn = builder.create();
+                        mDialogWarn.show();
+                    } else {
+                        //扫描成功
+                        mLlCaptureResult.setVisibility(View.VISIBLE);
+                        String[] strArray = message.split(",");
+                        mTvCaptureCode.setText(strArray[0]);
+                        mTvCaptureName.setText(strArray[1]);
+                        canScan = true;
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
